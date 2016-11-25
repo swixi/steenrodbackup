@@ -102,8 +102,19 @@ public class SelfMap {
 		 System.out.println(instanceOfTest(test2));
 		 */
 		 
+		 /*
+		 List<int[]> tempList = new ArrayList<int[]>();
+		 tempList.add(new int[0]);
+		 System.out.println(Arrays.toString(tempList.get(0)));
+		 tempList = (List<int[]>) DualSteenrod.reduceMod2(tempList);
 		 
-		 DualAn dualAn = new DualAn(3);
+		 for(int i = 0; i<tempList.size(); i++) 
+			 System.out.println(Arrays.toString(tempList.get(i)));
+		 */
+		 
+		 
+		 
+		 DualAn dualAn = new DualAn(1);
 		 Function sMap = dualAn.generatesMap();
 		 
 		 

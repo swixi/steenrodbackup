@@ -138,12 +138,20 @@ public class DualAn implements Algebra {
 					//TODO: this can probably be done much more elegantly using MilnorElements.
 					int[] mono2_1 = DualSteenrod.applyRelations(mono2, getRelations()); //in A(n)*
 					int[] mono2_2 = DualSteenrod.remainder(mono2, getRelations()); //in A//A(n)*
-					List<int[]> sMono2_1 = sMap.get(mono2_1).getAsList();
-					List<int[]> mono2_2AsList = new ArrayList<int[]>();
+					List<int[]> sMono2_1 = (List<int[]>) DualSteenrod.reduceMod2(sMap.get(mono2_1).getAsList());
+					
+					if(sMono2_1.size() == 0) {
+						//System.out.print("mono: " + mono + "; s map is zero for " + Arrays.toString(mono2_2) + "; ");
+						continue;
+					}
+					
+					
+					List<int[]> mono2_2AsList = new ArrayList<int[]>(1);
 					mono2_2AsList.add(mono2_2);
 					List<int[]> multiplied = (List<int[]>) DualSteenrod.reduceMod2(DualSteenrod.multiplySums(sMono2_1, mono2_2AsList));
 					
 					target.add(DualSteenrod.multiplySums(jMap.get(mono1).getAsList(),  multiplied    ));
+					System.out.println("nonzero s map: " + target);
 				}
 				
 				target.reduceMod2();
