@@ -54,10 +54,10 @@ public class SelfMap {
 		 */
 		 
 		 
-		 
+		 /*
 		 //TODO make sure running coproduct on [1,4] gives the same as [1,2,1,2] etc
 		 List<int[]> input = new ArrayList<int[]>();
-		 input.add(new int[]{1, 15, 2, 5});
+		 input.add(new int[]{1, 3, 2, 1});
 		 //input.add(new int[]{1, 5});
 		 //input.add(new int[]{2, 1});
 		 List<int[][]> tensorsUnreduced = DualSteenrod.coproduct(input);
@@ -67,7 +67,7 @@ public class SelfMap {
 		 System.out.println(tensors.size());
 		 
 		 for(int i = 0; i < tensorsUnreduced.size(); i++) {
-			 //System.out.print(Arrays.toString(tensorsUnreduced.get(i)[0]) + " X " + Arrays.toString(tensorsUnreduced.get(i)[1]) + (    (i == (tensorsUnreduced.size() - 1)) ? "" : " + "             )     );
+			 System.out.print(Arrays.toString(tensorsUnreduced.get(i)[0]) + " X " + Arrays.toString(tensorsUnreduced.get(i)[1]) + (    (i == (tensorsUnreduced.size() - 1)) ? "" : " + "             )     );
 		 }
 		 
 		 System.out.println("");
@@ -85,7 +85,7 @@ public class SelfMap {
 		 }
 		 
 		 System.out.println("");
-		 
+		 */
 		 
 		 
 		 /*
@@ -103,11 +103,11 @@ public class SelfMap {
 		 */
 		 
 		 
-		 DualAn dualAn = new DualAn(2);
+		 DualAn dualAn = new DualAn(3);
 		 Function sMap = dualAn.generatesMap();
 		 
 		 
-		 //System.out.println(sMap);
+		 System.out.println(sMap);
 		 
 		 System.out.println(dualAn.generatejMap(sMap));
 		 

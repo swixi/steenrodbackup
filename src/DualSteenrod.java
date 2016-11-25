@@ -39,16 +39,16 @@ public class DualSteenrod implements Algebra {
 			for(int i = 0; i < input.size(); i++) {
 				output.addAll(coproduct(input.subList(i, i+1)));
 			}
+			//TODO reduceMod2?
 			return output;
 		}
 		
 		int[] monomial = input.get(0);
 		List<Integer> monomialAsList = Tools.intArrayToList(monomial);
 		
-		if(SelfMap.coproductData.get(monomialAsList) != null) {
-			//System.out.print(" calling ");
+		if(SelfMap.coproductData.get(monomialAsList) != null) 
 			return SelfMap.coproductData.get(monomialAsList);
-		}
+		
 		
 		
 		//if single-term monomial of power 1
@@ -66,7 +66,7 @@ public class DualSteenrod implements Algebra {
 				output.add(tensor);
 			}
 			
-			//NOT reduced mod 2: some tensors may appear evenly many times
+			output = (List<int[][]>) reduceMod2(output);
 			SelfMap.coproductData.put(monomialAsList, output);
 			return output;
 		}
@@ -95,16 +95,16 @@ public class DualSteenrod implements Algebra {
 		
 		if(coprod1 == null) {
 			coprod1 = coproduct(tempList1);
-			System.out.print(" saving " + Arrays.toString(tempMono1) + " ");
+			//System.out.print(" saving " + Arrays.toString(tempMono1) + " ");
 			SelfMap.coproductData.put(Tools.intArrayToList(tempMono1), coprod1);
 		}
 		if(coprod2 == null) {
 			coprod2 = coproduct(tempList2);
-			System.out.print(" saving " + Arrays.toString(tempMono2) + " ");
+			//System.out.print(" saving " + Arrays.toString(tempMono2) + " ");
 			SelfMap.coproductData.put(Tools.intArrayToList(tempMono2), coprod2);
 		}
 		
-		output = multiplyTensors(coprod1, coprod2);
+		output = (List<int[][]>) reduceMod2(multiplyTensors(coprod1, coprod2));
 		SelfMap.coproductData.put(monomialAsList, output);
 		return output;
 	}
