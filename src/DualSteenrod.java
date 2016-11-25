@@ -33,7 +33,7 @@ public class DualSteenrod implements Algebra {
 	public static List<int[][]> coproduct(List<int[]> input) {
 		List<int[][]> output;
 		
-		//not a monomial
+		//if not a monomial, ie, if a sum of monomials
 		if(input.size() > 1){
 			output = new ArrayList<int[][]>();
 			for(int i = 0; i < input.size(); i++) {
@@ -43,7 +43,6 @@ public class DualSteenrod implements Algebra {
 		}
 		
 		int[] monomial = input.get(0);
-		
 		List<Integer> monomialAsList = Tools.intArrayToList(monomial);
 		
 		if(SelfMap.coproductData.get(monomialAsList) != null) {
@@ -51,68 +50,63 @@ public class DualSteenrod implements Algebra {
 			return SelfMap.coproductData.get(monomialAsList);
 		}
 		
-		List<int[]> tempList1, tempList2;
-		int[] tempMono1, tempMono2;
 		
-		//TODO the multi-term if statement and the single term, power > 1 if statement can probably be combined more elegantly since they are identical except for 2 lines
+		//if single-term monomial of power 1
+		if((monomial.length == 2) && (monomial[1] == 1)) {
+			int dimension = monomial[0];
+			output = new ArrayList<int[][]>(dimension+1);
+			int[][] tensor;
+			
+			//see Wood, page 8
+			for(int i = 0; i <= dimension; i++) {
+				tensor = new int[2][];
+				tensor[0] = applyRelations(new int[]{(dimension-i), (int) Math.pow(2, i)});
+				tensor[1] = applyRelations(new int[]{i, 1});
+				
+				output.add(tensor);
+			}
+			
+			//NOT reduced mod 2: some tensors may appear evenly many times
+			SelfMap.coproductData.put(monomialAsList, output);
+			return output;
+		}
+		
+		List<int[]> tempList1 = new ArrayList<int[]>(1);
+		List<int[]> tempList2 = new ArrayList<int[]>(1);
+		int[] tempMono1, tempMono2;
 		
 		//if a multi-term monomial
 		if(monomial.length > 2) {
 			//split off the first term, and recursively multiply by the rest
-			tempList1 = new ArrayList<int[]>(1);
-			tempList2 = new ArrayList<int[]>(1);
 			tempMono1 = new int[]{monomial[0], monomial[1]};
 			tempMono2 = Arrays.copyOfRange(monomial, 2, monomial.length);
-			tempList1.add(tempMono1);
-			tempList2.add(tempMono2);
-			
-			List<int[][]> tempCoprod = SelfMap.coproductData.get(Tools.intArrayToList(tempMono1));
-			
-			if(tempCoprod == null) {
-				tempCoprod = coproduct(tempList1);
-				System.out.print(" saving " + Arrays.toString(tempMono1) + " ");
-				SelfMap.coproductData.put(Tools.intArrayToList(tempMono1), tempCoprod);
-			}
-			
-			
-			output = multiplyTensors(tempCoprod, coproduct(tempList2));
-			SelfMap.coproductData.put(monomialAsList, output);
-			return output;
 		}
-		//if a single term monomial
+		//if a single term monomial (must have monomial.length == 2 AND monomial[1]>1 to have logically made it here)
 		else {
-			//if the single term is raised to a power > 1
-			if(monomial[1] > 1) {
-				tempList1 = new ArrayList<int[]>(1);
-				tempList2 = new ArrayList<int[]>(1);
-				tempMono1 = new int[]{monomial[0], 1};
-				tempMono2 = new int[]{monomial[0], monomial[1]-1};
-				tempList1.add(tempMono1);
-				tempList2.add(tempMono2);
-				
-				output = multiplyTensors(coproduct(tempList1), coproduct(tempList2));
-				SelfMap.coproductData.put(monomialAsList, output);
-				return output;
-			}
-			//single generator, power = 1
-			else {
-				output = new ArrayList<int[][]>();
-				int dimension = monomial[0];
-				int[][] tensor;
-				
-				//see Wood, page 8
-				for(int i = 0; i <= dimension; i++) {
-					tensor = new int[2][];
-					tensor[0] = applyRelations(new int[]{(dimension-i), (int) Math.pow(2, i)});
-					tensor[1] = applyRelations(new int[]{i, 1});
-					
-					output.add(tensor);
-				}
-				
-				SelfMap.coproductData.put(monomialAsList, output);
-				return output;
-			}
+			tempMono1 = new int[]{monomial[0], 1};
+			tempMono2 = new int[]{monomial[0], monomial[1]-1};
 		}
+		
+		tempList1.add(tempMono1);
+		tempList2.add(tempMono2);
+		
+		List<int[][]> coprod1 = SelfMap.coproductData.get(Tools.intArrayToList(tempMono1));
+		List<int[][]> coprod2 = SelfMap.coproductData.get(Tools.intArrayToList(tempMono2));
+		
+		if(coprod1 == null) {
+			coprod1 = coproduct(tempList1);
+			System.out.print(" saving " + Arrays.toString(tempMono1) + " ");
+			SelfMap.coproductData.put(Tools.intArrayToList(tempMono1), coprod1);
+		}
+		if(coprod2 == null) {
+			coprod2 = coproduct(tempList2);
+			System.out.print(" saving " + Arrays.toString(tempMono2) + " ");
+			SelfMap.coproductData.put(Tools.intArrayToList(tempMono2), coprod2);
+		}
+		
+		output = multiplyTensors(coprod1, coprod2);
+		SelfMap.coproductData.put(monomialAsList, output);
+		return output;
 	}
 	
 	
