@@ -115,4 +115,26 @@ public class Tools {
 		}
 		return DualSteenrod.applyRelations(output);
 	}
+	
+	public static String sumToString(List<?> input) {
+		if(input == null)
+			return null;
+		if(input.size() == 0)
+			return "";
+		
+		String output = "";
+		
+		if(input.get(0) instanceof int[]) 
+			for(int i = 0; i < input.size(); i++) 
+				output += Arrays.toString((int[]) input.get(i)) + ( (i != input.size() - 1) ? " + " : "" );
+		
+		if(input.get(0) instanceof int[][]) {
+			for(int i = 0; i < input.size(); i++) {
+				int[][] tensor = (int[][]) input.get(i);
+				output += Arrays.toString(tensor[0]) + " X " + Arrays.toString(tensor[1]) + ( (i != input.size() - 1) ? " + " : "" );
+			}
+		}
+		
+		return output;
+	}
 }

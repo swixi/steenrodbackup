@@ -3,9 +3,66 @@ import java.util.*;
 
 public class SelfMap {
 	public static Map<List<Integer>, List<int[][]>> coproductData = new HashMap<List<Integer>, List<int[][]>>();
+	private static Scanner reader;
 	
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
-		 long start = System.nanoTime();
+		long start = 0;
+		long end = 0;
+		reader = new Scanner(System.in);
+		List<?> lastOutput = null;
+		
+		while(true) {
+			System.out.print("Enter a command: ");
+			 
+			String str = reader.nextLine();
+			String keyWord = str.substring(0, str.indexOf(" "));
+			
+			if(keyWord.equals("reduce") || keyWord.equals("coprod") || keyWord.equals("remove")) {
+				String next = str.substring(str.indexOf(" ") + 1);
+				
+				if(next.equals("last")) {
+					if(keyWord.equals("reduce"))
+						lastOutput = DualSteenrod.reduceMod2(lastOutput);
+					if(keyWord.equals("remove"))
+						DualSteenrod.removePrimitives((List<int[][]>) lastOutput);
+				}
+				else {
+					String[] split = next.split(" [+] ");
+					
+					List<int[]> sum = new ArrayList<int[]>(split.length);
+					
+					for(String mono : split) {
+						String[] splitMono = mono.split(" ");
+						int[] monoAsArray = new int[splitMono.length];
+						
+						for(int i = 0; i < splitMono.length; i++)
+							monoAsArray[i] = Integer.parseInt(splitMono[i]);
+						
+						sum.add(monoAsArray);
+					}
+					
+					if(keyWord.equals("reduce"))
+						lastOutput = DualSteenrod.reduceMod2(sum);
+					if(keyWord.equals("coprod")) {
+						start = System.nanoTime();
+						lastOutput = DualSteenrod.coproduct(sum);
+						end = System.nanoTime();
+					}
+				}
+				System.out.println("(" + ((double)(end-start))/1000000 + " ms) " + Tools.sumToString(lastOutput));
+			}
+			else if(keyWord.equals("create")) {
+				
+			}
+			 	
+				 
+		}
+		 
+		 
+
+		 
+		 
 
 		 //System.out.println(cleanup(writeAsBasis("31 30")));
 		
@@ -113,7 +170,7 @@ public class SelfMap {
 		 */
 		 
 		 
-		 
+		 /*
 		 DualAn dualAn = new DualAn(1);
 		 Function sMap = dualAn.generatesMap();
 		 
@@ -121,7 +178,7 @@ public class SelfMap {
 		 System.out.println(sMap);
 		 
 		 System.out.println(dualAn.generatejMap(sMap));
-		 
+		 */
 		 
 		 
 		 
@@ -168,8 +225,8 @@ public class SelfMap {
 		 
 		
 		
-		long end = System.nanoTime();
-		System.out.println("time: " + ((double)(end-start))/1000000 + " ms");
+		//long end = System.nanoTime();
+		//System.out.println("time: " + ((double)(end-start))/1000000 + " ms");
 	}
 	
 	public static boolean instanceOfTest(Object o) {

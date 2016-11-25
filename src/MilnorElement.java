@@ -3,8 +3,14 @@ import java.util.Arrays;
 import java.util.List;
 
 //this class represents lists of monomials, ie, sums of monomials
+//CONVENTION: a list of size zero is 0; a list of size 1, with the array [] is 1
 public class MilnorElement {
 	private List<int[]> element;
+	
+	public MilnorElement(int num) {
+		if(num == 0) 
+			element = new ArrayList<int[]>(0);
+	}
 	
 	public MilnorElement(int[] input) {
 		if(input == null)
@@ -69,6 +75,6 @@ public class MilnorElement {
 	//TODO: should eventually make most code use MilnorElements instead of ad hoc int[] or List<int[]>
 	//		this would make it easier to test if some int[] represents zero as well
 	public boolean isZero() {
-		return false;
+		return (element.size() == 0);
 	}
 }

@@ -29,7 +29,8 @@ public class DualSteenrod implements Algebra {
 	//OUTPUT: a polynomial of tensored generators, like x_1^2 x_2^4 \otimes x_3^2 + (stuff) [not the acutal coprod of the example input]
 	//represented by a list of (size 2) arrays of int[], like [ [1, 2, 2, 4] , [3, 2] ] -> (stuff)
 	//this is a function A \to A tensor A (notice the input vs the ouput)
-	//NOTE: the output will NOT BE reduced mod 2
+	//NOTE: the output will NOW BE reduced mod 2
+	@SuppressWarnings("unchecked")
 	public static List<int[][]> coproduct(List<int[]> input) {
 		List<int[][]> output;
 		
@@ -39,8 +40,8 @@ public class DualSteenrod implements Algebra {
 			for(int i = 0; i < input.size(); i++) {
 				output.addAll(coproduct(input.subList(i, i+1)));
 			}
-			//TODO reduceMod2?
-			return output;
+			
+			return (List<int[][]>) reduceMod2(output);
 		}
 		
 		int[] monomial = input.get(0);
@@ -48,8 +49,6 @@ public class DualSteenrod implements Algebra {
 		
 		if(SelfMap.coproductData.get(monomialAsList) != null) 
 			return SelfMap.coproductData.get(monomialAsList);
-		
-		
 		
 		//if single-term monomial of power 1
 		if((monomial.length == 2) && (monomial[1] == 1)) {
